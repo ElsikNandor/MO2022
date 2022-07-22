@@ -9,13 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //Villany számolás 1.0 2022-07-18
 
 public class szamolas extends AppCompatActivity {
     Button mButton;
     EditText eregiar, eujar, ehatar, efogyasztas;
-    TextView teredmeny;
+    TextView teredmeny, tbekezdes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class szamolas extends AppCompatActivity {
         ehatar = findViewById(R.id.ehatar);
         efogyasztas = findViewById(R.id.efogyasztas);
         mButton = findViewById(R.id.button);
+        tbekezdes = findViewById(R.id.bekezdes);
         String uzenet = getIntent().getStringExtra("gomb");
         Log.i("Klikk", uzenet);
         Log.i("Klikk", String.valueOf(eregiar.getText()));
@@ -33,10 +35,11 @@ public class szamolas extends AppCompatActivity {
         {
             setTitle("Villanyfogyasztás számolás");
             eregiar.setText("37");
-            eujar.setText("70");
+            eujar.setText("70.1");
             ehatar.setText("210");
             efogyasztas.setText("210");
-            Log.i("Klikk", String.valueOf(eregiar.getText()));
+            tbekezdes.setText("A1 és A2 árszabás esetén a számolt értékek:");
+            //Log.i("Klikk", String.valueOf(eregiar.getText()));
         }
 
        // Log.i("Klikk", String.valueOf(eregiar.getText()));
@@ -48,6 +51,7 @@ public class szamolas extends AppCompatActivity {
             eujar.setText("747");
             ehatar.setText("144");
             efogyasztas.setText("144");
+            tbekezdes.setText("Lakossági fogyasztás esetén számolt értékek:");
 
         }
 
@@ -56,7 +60,7 @@ public class szamolas extends AppCompatActivity {
     public void szamolClick(View v)
     {
         teredmeny = findViewById(R.id.erd);
-        int regiar,ujar,hatar,fogyasztas, szujf, szregiar,szujar ;
+        float regiar,ujar,hatar,fogyasztas, szujf, szregiar,szujar ;
         regiar = 0;
         ujar = 0;
         hatar = 0;
@@ -64,10 +68,10 @@ public class szamolas extends AppCompatActivity {
         String er = "";
         if ( mezok(eregiar) && mezok(eujar) && mezok(ehatar) && mezok(efogyasztas) )
         {
-            regiar = Integer.parseInt(eregiar.getText().toString());
-            ujar = Integer.parseInt(eujar.getText().toString());
-            hatar = Integer.parseInt(ehatar.getText().toString());
-            fogyasztas = Integer.parseInt(efogyasztas.getText().toString());
+            regiar = Float.parseFloat(eregiar.getText().toString());
+            ujar = Float.parseFloat(eujar.getText().toString());
+            hatar = Float.parseFloat(ehatar.getText().toString());
+            fogyasztas = Float.parseFloat(efogyasztas.getText().toString());
 
             if( fogyasztas < hatar)
             {
@@ -104,11 +108,14 @@ public class szamolas extends AppCompatActivity {
 
     public boolean mezok(EditText tx)
     {
-        int itmp;
+        float itmp;
         try {
-            itmp = Integer.parseInt(tx.getText().toString());
+            itmp = Float.parseFloat(tx.getText().toString());
         } catch(NumberFormatException nfe) {
             tx.setTextColor(Color.parseColor("#FF0000"));
+            Toast.makeText(this,
+                    "Csak számot lehet a mezőkbe írni.\nTört tagolás a ponttal.",
+                    Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
